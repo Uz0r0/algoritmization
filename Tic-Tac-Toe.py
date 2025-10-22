@@ -20,27 +20,28 @@ def computerMove(possibleNumbers):
     position = random.choice(possibleNumbers) 
     return position   
 
-def checkWin(grid):
-    winLines = [
-        [(0,0), (0,1), (0,2)], 
-        [(1,0), (1,1), (1,2)],  
-        [(2,0), (2,1), (2,2)], 
-        [(0,0), (1,0), (2,0)],  
-        [(0,1), (1,1), (2,1)],  
-        [(0,2), (1,2), (2,2)],  
-        [(0,0), (1,1), (2,2)],  
-        [(0,2), (1,1), (2,0)]   
-    ]
+def checkWin(board):
+    for row in board:
+        if row[0] == row[1] == row[2]:
+            return row[0], True
 
-    for line in winLines:
-        (r1, c1), (r2, c2), (r3, c3) = line
-        v1 = grid[r1][c1]
-        v2 = grid[r2][c2]
-        v3 = grid[r3][c3]
-        if v1 == v2 == v3 and v1 in ('x', 'o'):
-            print("We have a winner!")
-            return True
-        return False
+    for i in range(3):
+        if board[0][i] == board[1][i] == board[2][i]:
+            return board[0][i], True
+        if board[0][0] == board[1][1] == board[2][2]:
+            return board[0][0], True
+        if board[0][2] == board[1][1] == board[2][0]:
+            return board[0][2], True
+
+    return None, False
+
+def printWinner(variable, isGameDone, computerVariable):
+    if isGameDone:
+        print()
+        if variable == computerVariable:
+            print('You lost')
+        else:
+            print('Congrats, you won!!!')
 
 def playAgain():
     return input('Do you want play again? (yes or no)').lower().startswith('y')
@@ -106,7 +107,8 @@ def main():
         updateGrid(grid, position, variable)
         createGrid(grid)
 
-        isGameDone = checkWin(grid)  
+        winnerVariable, isGameDone = checkWin(grid)
+        printWinner(winnerVariable, isGameDone, computerVariable) 
 
         if isGameDone:
             if playAgain():
@@ -133,7 +135,8 @@ def main():
         updateGrid(grid, coMove, computerVariable)
         createGrid(grid)
 
-        isGameDone = checkWin(grid)  
+        winnerVariable, isGameDone = checkWin(grid)
+        printWinner(winnerVariable, isGameDone, computerVariable) 
 
         if isGameDone:
             if playAgain():
